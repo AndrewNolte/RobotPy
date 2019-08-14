@@ -7,13 +7,9 @@
 # ----------------------------------------------------------------------------
 from typing import List, Tuple
 
-import hal
 import math
 import warnings
 import weakref
-
-from .motorsafety import MotorSafety
-from .talon import Talon
 
 __all__ = ["RobotDrive"]
 
@@ -30,7 +26,7 @@ def _freeRobotDrive(allocatedSpeedControllers) -> None:
             sc.free()
 
 
-class RobotDrive(MotorSafety):
+class RobotDrive:
     """
     .. deprecated:: 2018.0.0
         Use :class:`.DifferentialDrive` or :class:`.MecanumDrive` instead.
@@ -113,8 +109,7 @@ class RobotDrive(MotorSafety):
             self.rearRightMotor = kwargs.pop("rightMotor")
 
         controllerClass = kwargs.pop("motorController", None)
-        if controllerClass is None:
-            controllerClass = Talon
+
 
         if kwargs:
             warnings.warn(
@@ -191,13 +186,6 @@ class RobotDrive(MotorSafety):
         Conversely, turn radius r = -ln(curve)*w for a given value of curve and
         wheelbase w.
         """
-        if not RobotDrive.kArcadeRatioCurve_Reported:
-            hal.report(
-                hal.UsageReporting.kResourceType_RobotDrive,
-                self.getNumMotors(),
-                hal.UsageReporting.kRobotDrive_ArcadeRatioCurve,
-            )
-            RobotDrive.kArcadeRatioCurve_Reported = True
 
         if curve < 0:
             value = math.log(-curve)
@@ -251,13 +239,6 @@ class RobotDrive(MotorSafety):
         :param squaredInputs: Setting this parameter to True decreases the
             sensitivity at lower speeds.  Defaults to True if unspecified.
         """
-        if not RobotDrive.kTank_Reported:
-            hal.report(
-                hal.UsageReporting.kResourceType_RobotDrive,
-                self.getNumMotors(),
-                hal.UsageReporting.kRobotDrive_Tank,
-            )
-            RobotDrive.kTank_Reported = True
 
         # keyword arguments
         leftStick = kwargs.pop("leftStick", None)
@@ -360,13 +341,6 @@ class RobotDrive(MotorSafety):
             sensitivity at lower speeds.  Defaults to True if unspecified.
         """
 
-        if not RobotDrive.kArcadeStandard_Reported:
-            hal.report(
-                hal.UsageReporting.kResourceType_RobotDrive,
-                self.getNumMotors(),
-                hal.UsageReporting.kRobotDrive_ArcadeStandard,
-            )
-            RobotDrive.kArcadeStandard_Reported = True
 
         # keyword arguments
         stick = kwargs.pop("stick", None)
@@ -468,13 +442,7 @@ class RobotDrive(MotorSafety):
         :param gyroAngle: The current angle reading from the gyro.  Use this
             to implement field-oriented controls.
         """
-        if not RobotDrive.kMecanumCartesian_Reported:
-            hal.report(
-                hal.UsageReporting.kResourceType_RobotDrive,
-                self.getNumMotors(),
-                hal.UsageReporting.kRobotDrive_MecanumCartesian,
-            )
-            RobotDrive.kMecanumCartesian_Reported = True
+
 
         xIn = x
         yIn = y
@@ -517,13 +485,7 @@ class RobotDrive(MotorSafety):
         :param rotation: The rate of rotation for the robot that is completely
             independent of the magnitute or direction. [-1.0..1.0]
         """
-        if not RobotDrive.kMecanumPolar_Reported:
-            hal.report(
-                hal.UsageReporting.kResourceType_RobotDrive,
-                self.getNumMotors(),
-                hal.UsageReporting.kRobotDrive_MecanumPolar,
-            )
-            RobotDrive.kMecanumPolar_Reported = True
+
 
         # Normalized for full power along the Cartesian axes.
         magnitude = RobotDrive.limit(magnitude) * math.sqrt(2.0)
