@@ -50,10 +50,6 @@ class Scheduler(SendableBase):
         """Instantiates a Scheduler.
         """
         super().__init__()
-        hal.report(
-            hal.UsageReporting.kResourceType_Command,
-            hal.UsageReporting.kCommand_Scheduler,
-        )
         self.setName("Scheduler")
 
         # Active Commands

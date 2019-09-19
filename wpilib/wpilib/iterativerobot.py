@@ -46,10 +46,6 @@ class IterativeRobot(IterativeRobotBase):
                      the communications code starts.
         """
         super().__init__(IterativeRobot.kPacketPeriod)
-        hal.report(
-            hal.UsageReporting.kResourceType_Framework,
-            hal.UsageReporting.kFramework_Iterative,
-        )
 
     def __init_subclass__(cls, **kwargs) -> None:
         warnings.warn(
@@ -63,9 +59,6 @@ class IterativeRobot(IterativeRobotBase):
         """Provide an alternate "main loop" via startCompetition()."""
 
         self.robotInit()
-
-        # Tell the DS that the robot is ready to be enabled
-        hal.observeUserProgramStarting()
 
         # loop forever, calling the appropriate mode-dependent function
         while True:
